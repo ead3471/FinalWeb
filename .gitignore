@@ -1,0 +1,19 @@
+# IntelliJ project files #
+.idea
+classes
+out
+build
+*.class
+
+# Eclipse project files #
+.classpath
+.project
+.settings
+
+# Gradle #
+target
+gradlew*
+
+# Package Files #
+*.war
+*.ear# Created by .ignore support plugin (hsz.mobi)

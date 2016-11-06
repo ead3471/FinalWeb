@@ -1,0 +1,6 @@
+rootProject.name = 'FinalWeb'
+
+include 'core',
+        'jdbc',
+        'xml',
+        'servlets'
