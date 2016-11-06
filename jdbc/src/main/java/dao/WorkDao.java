@@ -8,22 +8,21 @@ import org.apache.logging.log4j.Logger;
 import org.h2.security.SHA256;
 import pool.ConnectionPool;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.sql.*;
+import java.util.*;
 
 public class WorkDao {
 
     private final String TABLE = "WORKS";
     private final String ID = "id";
     private final String CREATOR = "creator_id";
-    public static final String DESCRIPTION = "description";
-    public static final String STATUS = "status";
-    public static final String SHORT_DESCRIPTION = "short_description";
+    private static final String DESCRIPTION = "description";
+    private static final String STATUS = "status";
+    private static final String SHORT_DESCRIPTION = "short_description";
+
+    public static final String WORK_SPECS_SQL="SELECT spec_id FROM WORKS_SPECS WHERE work_id=?";
+
+
 
     private final ConnectionPool connectionPool;
     private final Logger logger = LogManager.getLogger(UserDao.class);
@@ -34,19 +33,45 @@ public class WorkDao {
 
     private List<Work> getWorksBySql(String sql) throws DaoException {
         try (Connection con = connectionPool.takeConnection();
+             PreparedStatement preparedStatement=con.prepareStatement(WORK_SPECS_SQL);
              Statement st = con.createStatement();
              ResultSet rs = st.executeQuery(sql)) {
 
             List<Work> resultList = new ArrayList<>();
 
             while (rs.next()) {
-                resultList.add(new Work(rs.getInt(ID),
-                        rs.getInt(CREATOR),
-                        rs.getString(DESCRIPTION),
-                        rs.getInt(STATUS),
-                        rs.getString(SHORT_DESCRIPTION)
-                ));
+                try{
+                    resultList.add(new Work(rs.getInt(ID),
+                            rs.getInt(CREATOR),
+                            rs.getString(DESCRIPTION),
+                            rs.getInt(STATUS),
+                            rs.getString(SHORT_DESCRIPTION)
+                    ));
+                }
+                catch(SQLException ex){
+                    logger.warn("Error create work",ex);
+                }
             }
+
+/*            rs.close();
+
+
+
+            for(Work work:resultList){
+                try(preparedStatement.setInt(1,work.getId());
+                ResultSet resultSet=preparedStatement.executeQuery())
+                {
+                    preparedStatement.setInt(1, work.getId());
+                    Set<String> workSpecsSet = new HashSet<>();
+                }
+
+
+
+
+            }
+*/
+
+
             return resultList;
         } catch (SQLException | InterruptedException ex) {
             throw new DaoException(ex);

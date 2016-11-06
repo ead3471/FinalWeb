@@ -25,9 +25,6 @@ public class Work {
         this.workSpecialisations=workSpecialisations;
     }
 
-
-
-
     public Work(int creatorId, String description, int status, String shortDescription,Set<Integer> workSpecialisations) {
        this(0,creatorId,description,status,shortDescription,workSpecialisations);
     }

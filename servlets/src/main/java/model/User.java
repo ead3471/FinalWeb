@@ -6,12 +6,13 @@ package model;
 public class User {
     private int id;
     private String fullName;
+    private String login;
     private String password;
     private String photoUrl;
     private String role;
 
-
-    public User(int id, String fullName, String password, String photoUrl, String role) {
+//TODO add login support!
+    public User(int id, String fullName,String password, String photoUrl, String role) {
         this.id = id;
         this.fullName = fullName;
         this.password = password;
