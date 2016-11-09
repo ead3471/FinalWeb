@@ -5,7 +5,7 @@ dependencies {
     compile project(":core")
     compile project(":jdbc")
 
-    compile group: 'mysql', name: 'mysql-connector-java', version: '6.0.5'
+
     // Tomcat internal libraries
     providedCompile 'org.apache.tomcat:tomcat-api:+'
     providedCompile 'org.apache.tomcat:tomcat-jsp-api:+'

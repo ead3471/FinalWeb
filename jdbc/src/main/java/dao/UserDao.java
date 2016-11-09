@@ -7,10 +7,7 @@ import model.User;
 
 import pool.ConnectionPool;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -19,18 +16,29 @@ import java.util.Optional;
  * Created by Freemind on 2016-11-06.
  */
 public class UserDao {
+
     private final ConnectionPool connectionPool;
     private final Logger logger= LogManager.getLogger(UserDao.class);
 
 
-    private final static String ID ="short_name";
+    private final static String ID ="id";
+    private final static String LOGIN="login";
     private final static String FULL_NAME="name";
     private final static String PASS="password";
     private final static String PHOTO="photo_url";
     private final static String ROLE="role";
-    private final static String TABLE="USERS";
+    private static final String RATE ="rate";
+    private final static String TABLE="users";
 
     private final static String DELETE_SQL="DELETE FROM" +TABLE+ "WHERE"+ ID +"=";
+    private final static String INSERT_SQL=new StringBuilder("INSERT INTO ").append(TABLE).append(" (")
+            .append(LOGIN).append(",")
+            .append(FULL_NAME).append(",")
+            .append(PASS).append(",")
+            .append(ROLE).append(") VALUES ").toString();
+
+    private final static String PREPARED_INSERT_SQL=INSERT_SQL+"(?,?,?,?)";
+
 
     public UserDao(ConnectionPool connectionPool){
         this.connectionPool=connectionPool;
@@ -45,10 +53,12 @@ public class UserDao {
 
             while(rs.next()){
                 resultList.add(new User(rs.getInt(ID),
+                        rs.getString(LOGIN),
                         rs.getString(FULL_NAME),
                         rs.getString(PASS),
                         rs.getString(PHOTO),
-                        rs.getString(ROLE)
+                        rs.getString(ROLE),
+                        rs.getFloat(RATE)
                 ));
             }
             return resultList;
@@ -72,6 +82,10 @@ public class UserDao {
             return Optional.empty();
     }
 
+    public List<User> getAllUsers() throws DaoException {
+        return getUsersByFilter(filter());
+    }
+
     public  UserFilter filter(){
         return new UserFilter();
     }
@@ -91,9 +105,11 @@ public class UserDao {
     public void updateUser(User user) throws DaoException{
         StringBuilder stringBuilder=new StringBuilder("UPDATE"+TABLE+"SET"+FULL_NAME+"='")
                 .append(user.getFullName()).append("',")
+                .append(LOGIN).append("='").append(user.getLogin()).append("' ")
                 .append(PASS).append("='").append(user.getPassword()).append("',")
                 .append(ROLE).append("='").append(user.getRole()).append("',")
                 .append(PHOTO).append("='").append(user.getPhotoUrl()).append("',")
+                .append(RATE).append("='").append(user.getRate()).append("',")
                 .append(" WHERE"+ ID).append("='").append(user.getId()).append("'");
         try(Connection con=connectionPool.takeConnection();
             Statement st=con.createStatement() ){
@@ -105,29 +121,73 @@ public class UserDao {
         }
     }
 
+    public void insertUser(User user) throws DaoException {
+        StringBuilder stringBuilder=new StringBuilder(INSERT_SQL)
+                .append("('").append(user.getLogin()).append("'").append(",")
+               .append("'").append(user.getFullName()).append("'").append(",")
+                .append("'").append(user.getPassword()).append("'").append(",")
+                .append("'").append(user.getRole()).append("')");
+
+        try(Connection con=connectionPool.takeConnection();
+        Statement st= con.createStatement())
+        {
+            st.executeUpdate(stringBuilder.toString());
+        }
+        catch (SQLException|InterruptedException ex){
+            throw  new DaoException(ex);
+        }
+    }
+
+    public void insertUsers(List<User> users) throws DaoException {
+        try(Connection con=connectionPool.takeConnection();
+            PreparedStatement preparedStatement=con.prepareStatement(PREPARED_INSERT_SQL);){
+
+            for(User user:users){
+                try{
+                    preparedStatement.setString(1,user.getLogin());
+                    preparedStatement.setString(2,user.getFullName());
+                    preparedStatement.setString(3,user.getPassword());
+                    preparedStatement.setString(4,user.getRole());
+                    preparedStatement.executeUpdate();
+                }
+                catch(SQLException ex){
+                    logger.warn("Error at user add "+user,ex);
+                }
+            }
+
+        }
+        catch(InterruptedException|SQLException ex){
+            throw new DaoException(ex);
+        }
+
+
+    }
+
     public class UserFilter extends DaoFilter{
-
-
         private UserFilter(){
-            resultSqlBuilder= new StringBuilder("SELECT"
+            super( "SELECT "
                     + ID +","
+                    + LOGIN +","
                     +FULL_NAME+","
                     +PASS+","
                     +PHOTO+","
-                    +ROLE+" FROM" +TABLE);
-
+                    +ROLE+" FROM " +TABLE);
         }
 
 
         public DaoFilter withID(int id){
-            return addCondition(ID,String.valueOf(id));
+            return addAndCondition(ID,String.valueOf(id));
         }
         public DaoFilter withFullName(String fullName){
-            return addCondition(FULL_NAME,fullName);
+            return addAndCondition(FULL_NAME,fullName);
         }
         public DaoFilter withRole(String roleName){
-            return addCondition(ROLE,roleName);
+            return addAndCondition(ROLE,roleName);
         }
+        public DaoFilter withRateGreaterThen(String value){
+            return addAndCondition(ROLE,">",value);
+        }
+
 
 
 

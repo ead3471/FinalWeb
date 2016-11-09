@@ -12,26 +12,26 @@ public class Work {
     private int status;
     private String shortDescription;
     private int reward=0;
+    private float rate=0;
 
-    private Set<Integer> workSpecialisations=new HashSet<>();
 
 
-    public Work(int id, int creatorId, String description, int status, String shortDescription, Set<Integer> workSpecialisations) {
+
+    public Work(int id, int creatorId, String description, int status, String shortDescription, int reward, float rate) {
         this.id = id;
         this.creatorId = creatorId;
         this.description = description;
         this.status = status;
         this.shortDescription = shortDescription;
-        this.workSpecialisations=workSpecialisations;
+        this.reward=reward;
+        this.rate=rate;
     }
 
-    public Work(int creatorId, String description, int status, String shortDescription,Set<Integer> workSpecialisations) {
-       this(0,creatorId,description,status,shortDescription,workSpecialisations);
+    public Work(int creatorId, String description, int status, String shortDescription, int reward,float rate) {
+        this(0,creatorId,description,status,shortDescription,reward,rate);
     }
 
-    public Work(int anInt, int anInt1, String string, int anInt2, String string1) {
-        //TODO:constructor!!!!
-    }
+
 
     public int getId() {
         return id;
@@ -76,5 +76,9 @@ public class Work {
 
     public void setReward(int reward) {
         this.reward = reward;
+    }
+
+    public float getRate() {
+        return rate;
     }
 }

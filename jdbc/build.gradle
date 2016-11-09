@@ -1,6 +1,6 @@
 dependencies {
     compile 'com.h2database:h2:+'
+    compile 'mysql:mysql-connector-java:+'
 
-
-    compile project(":servlets")
+    //compile project(":servlets")
 }

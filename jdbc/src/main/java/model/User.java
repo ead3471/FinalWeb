@@ -10,22 +10,28 @@ public class User {
     private String password;
     private String photoUrl;
     private String role;
+    private float rate;
 
-//TODO add login support!
-    public User(int id, String fullName,String password, String photoUrl, String role) {
+
+    public User(int id,String login, String fullName,String password, String photoUrl, String role,float rate) {
         this.id = id;
+        this.login=login;
         this.fullName = fullName;
         this.password = password;
         this.photoUrl = photoUrl;
         this.role = role;
-    }
-
-    public User(String fullName, String password, String photoUrl, String role) {
-        this(0,fullName,password,photoUrl,role);
+        this.rate=rate;
     }
 
 
 
+    public User(String fullName, String login,String password, String photoUrl, String role) {
+        this(0,login,fullName,password,photoUrl,role,0);
+    }
+
+    public String getLogin() {
+        return login;
+    }
 
     public int getId() {
         return id;
@@ -76,5 +82,9 @@ public class User {
     @Override
     public int hashCode() {
         return getId();
+    }
+
+    public float getRate() {
+        return rate;
     }
 }
