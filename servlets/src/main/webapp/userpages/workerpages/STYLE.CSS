@@ -1,0 +1,16 @@
+
+
+.navmenu a{
+    font: bold 13px Verdana; /*Шрифт текста*/
+    /*padding: 5px; /*Внутренний отсутп текста ссылки от краев ячейки*/
+    display: block;
+    width: 100%; /*Ширина ячейки*/
+    color: #000000;  /*Цвет текста*/
+    text-decoration: none; /*Подчеркивание у ссылок - нет*/
+    border-bottom: 2px solid #fffbf9;
+}
+
+
+.navmenu a:hover{
+    background-color: #bfccd6; /*Фоновый цвет ячейки при наведение курсора*/
+    color: #000000;}/*Цвет текста при наведении курсора*/

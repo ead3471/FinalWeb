@@ -1,19 +1,75 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: Freemind
-  Date: 2016-11-10
-  Time: 17:25
-  To change this template use File | Settings | File Templates.
---%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+
+<c:set var="language"
+       value="${not empty param.language ? param.language : not empty language ? language : pageContext.request.locale}"
+       scope="session"/>
+<fmt:setLocale value="${language}"/>
+<fmt:setBundle basename="lang/dialogs"/>
+
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
     <title>Worker page</title>
+    <link href="/userpages/workerpages/STYLE.CSS" rel="stylesheet" type="text/css">
 </head>
 <body>
 
-<h1> Hello worker ${sessionScope.user.login}</h1>
+<h1> Hello worker ${sessionScope.user.fullName}</h1>
+
+<table border="1" width="100%">
+    <tbody>
+
+    <tr>
+        <td><!--Photo-->
+            <img src=${sessionScope.user.photoUrl}>
+        </td>
+        <td>
+            <h1><fmt:message key="worker.mainInfoLabel"/></h1>
+        </td>
+    </tr>
+
+    <tr>
+        <td width="20%"><!--navigation-->
+            <div class="navmenu">
+                <a href="#" onclick=loadContent("/userpages/workerpages/profileEdit.jsp")><fmt:message key="worker.profileLabel"/></a>
+                <a href="#" onclick=loadContent("/userpages/workerpages/profileEdit.jsp")><fmt:message key="worker.profileLabel"/></a>
+                <a href="#" onclick=loadContent("/userpages/workerpages/profileEdit.jsp")><fmt:message key="worker.profileLabel"/></a>
+                <a href="#" onclick=loadContent("/userpages/workerpages/profileEdit.jsp")><fmt:message key="worker.profileLabel"/></a>
+
+            </div>
+
+
+        </td>
+
+
+        <td><!--main load place-->
+            <div id="content">
+
+
+
+
+            </div>
+
+
+        </td>
+
+    </tr>
+
+
+    </tbody>
+
+</table>
 
 <jsp:include page="/logout.jsp"/>
-</body>
-</html>
+<script language="JavaScript">
+
+    function loadContent(url) {
+
+            document.getElementById("content").innerHTML='<object type="text/html" data='+url+' ></object>';
+
+    }
+</script>
+
+</body >
+</html >

@@ -37,6 +37,8 @@ public class AuthFilter extends HttpFilter {
 
         if (userIsLoggedIn(session) && userRequestIsValid(session, request)||isRegisterRequest(request)) {
             logger.debug("User" + session.getAttribute("userName") + " accepted access to" + request.getRequestURI());
+            if(request.getRequestURI().length()==0|| request.getRequestURI().equals("/"))
+                forwardToUserPage(request,response);
             chain.doFilter(request, response);
         }
         else {
@@ -83,6 +85,11 @@ public class AuthFilter extends HttpFilter {
         }
         logger.debug("Access to "+request.getRequestURI()+": Failed: user not logged in");
         return false;
+    }
+
+    private void forwardToUserPage(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        request.getRequestDispatcher("/userpages/"+((User)(request.getSession().getAttribute("user"))).getRole()+".jsp").forward(request,response);
+
     }
 
 }
