@@ -76,7 +76,7 @@ public class UserDao {
         userFilter.withLimit(1);
         List<User> resultList=getUsersByFilter(userFilter);
         if(resultList.size()>0){
-            return Optional.of(resultList.get(1));
+            return Optional.of(resultList.get(0));
         }
         else
             return Optional.empty();
@@ -171,7 +171,9 @@ public class UserDao {
                     +FULL_NAME+","
                     +PASS+","
                     +PHOTO+","
-                    +ROLE+" FROM " +TABLE);
+                    +ROLE+","
+                    +RATE
+                    +" FROM " +TABLE);
         }
 
 
@@ -189,8 +191,13 @@ public class UserDao {
         }
 
 
+        public UserFilter withLogin(String login) {return (UserFilter) addAndCondition(LOGIN,login);
+        }
 
 
+        public UserFilter withPass(String pass) {
+            return (UserFilter) addAndCondition(PASS,pass);
+        }
 
     }
 }

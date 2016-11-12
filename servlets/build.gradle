@@ -9,6 +9,7 @@ dependencies {
     // Tomcat internal libraries
     providedCompile 'org.apache.tomcat:tomcat-api:+'
     providedCompile 'org.apache.tomcat:tomcat-jsp-api:+'
+    compile group: 'javax.servlet', name: 'jstl', version: '1.2'
 
 
     // JSTL
