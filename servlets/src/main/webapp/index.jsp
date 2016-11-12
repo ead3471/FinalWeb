@@ -32,6 +32,18 @@
             <jsp:include page="/login.jsp"/>
         </td>
     </tr>
+
+    <tr>
+        <td><h1><fmt:message key="index.registerLabel"/></h1></td>
+    </tr>
+
+    <tr>
+        <td>
+            <jsp:include page="/register.jsp"/>
+        </td>
+
+    </tr>
+
 </table>
 
 </body>

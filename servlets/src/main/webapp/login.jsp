@@ -49,11 +49,7 @@
                 </table>
             </td>
         </tr>
-        <tr>
-            <td>
-                <a href="register.jsp"><fmt:message key="login.registerLabel"/></a>
-            </td>
-        </tr>
+
     </table>
 </form>
 

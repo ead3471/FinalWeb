@@ -30,14 +30,12 @@ public class AuthFilter extends HttpFilter {
     @Override
     public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
         HttpSession session = request.getSession();
-        setUserDestinationUrl(request,session);
+       // setUserDestinationUrl(request,session);
         checkAndSetLanguage(request);
-//        if(isAuthorisationRequest(request)||isLogoutRequest(request)){
-//            chain.doFilter(request, response);
-//            return;
-//        }
 
-        if (userIsLoggedIn(session) && userRequestIsValid(session, request)) {
+
+
+        if (userIsLoggedIn(session) && userRequestIsValid(session, request)||isRegisterRequest(request)) {
             logger.debug("User" + session.getAttribute("userName") + " accepted access to" + request.getRequestURI());
             chain.doFilter(request, response);
         }
@@ -48,13 +46,10 @@ public class AuthFilter extends HttpFilter {
         }
     }
 
-//    private boolean isAuthorisationRequest(HttpServletRequest request){
-//        return request.getRequestURI().endsWith("/logoit");
-//    }
-//
-//    private boolean isLogoutRequest(HttpServletRequest request){
-//        return request.getRequestURI().endsWith("/logout");
-//    }
+    private boolean isRegisterRequest(HttpServletRequest request){
+        return request.getRequestURI().endsWith("/register/");
+
+    }
 
 
 
@@ -81,8 +76,6 @@ public class AuthFilter extends HttpFilter {
 
     private boolean userRequestIsValid(HttpSession session, HttpServletRequest request){
         Optional<User> sessionUser=Optional.ofNullable((User) session.getAttribute("user"));
-
-
         if(sessionUser.isPresent()){
             boolean accessGranted= rolesInspector.isUserRequestValid(sessionUser.get(),request.getRequestURI());
             logger.debug("Access for user "+sessionUser.get().getFullName()+" to "+request.getRequestURI()+":"+accessGranted);

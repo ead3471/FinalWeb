@@ -16,7 +16,7 @@
 
 
 <body>
-<form action="/register" method="post">
+<form action="/register/" method="post">
     <table>
         <tr>
             <th colspan="2">
@@ -48,7 +48,7 @@
                 <fmt:message key="register.passLabel"/>
             </td>
             <td>
-                <input type="password" name="pass1" value="">
+                <input type="password" name="pass" value="">
             </td>
         </tr>
 
@@ -60,6 +60,23 @@
 
                 <input type="password" name="pass2" value="">
             </td>
+        </tr>
+
+        <tr>
+            <td>
+                <select name="userType">
+                    <option value="worker"><fmt:message key="register.userTypeWorkerLabel"/></option>
+                    <option value="client"><fmt:message key="register.userTypeClientLabel"/></option>
+                </select>
+
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                <input type="submit" value=<fmt:message key="register.submitLabel"/>>
+            </td>
+
         </tr>
     </table>
 </form>

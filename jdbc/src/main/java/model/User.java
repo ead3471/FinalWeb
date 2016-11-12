@@ -29,6 +29,8 @@ public class User {
         this(0,login,fullName,password,photoUrl,role,0);
     }
 
+
+
     public String getLogin() {
         return login;
     }
