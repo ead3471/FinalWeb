@@ -29,6 +29,11 @@ public class User {
         this(0,login,fullName,password,photoUrl,role,0);
     }
 
+    public User(String fullName,String photoUrl, String role){
+        this(fullName,"","",photoUrl,role);
+
+    }
+
 
 
     public String getLogin() {

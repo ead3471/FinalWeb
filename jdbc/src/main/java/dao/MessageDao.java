@@ -24,6 +24,7 @@ public class MessageDao {
     private static final String TO = "to_id";
     private static final String TIMESTAMP = "time_stamp";
     private static final String TEXT = "text";
+    private static final String DIALOG_ID="dialog_id";
 
     private final static String INSERT_SQL="INSERT INTO "+TABLE+" ("+FROM+","+TO+","+TEXT+") VALUES (";
     private final static String PREPARED_INSERT_SQL=INSERT_SQL+"?,?,?)";
@@ -99,10 +100,9 @@ public class MessageDao {
         return getMessagesByFilter(filter().allWithUserId(fromId).allWithUserId(toId).orderBy(TIMESTAMP, "DESC"));
     }
 
-    private List<Message> getLastMessages(int userId){
+    private List<Message> getLastMessages(int userId) throws DaoException {
 
-        //TODO:How  query only last messages??????
-        return null;
+        return getMessagesBySql("SELECT "+FROM+","+TO+", MAX("+TIMESTAMP+") "+TIMESTAMP+" FROM "+TABLE +" GROUP BY "+DIALOG_ID+" ORDER BY "+TIMESTAMP+" DESC");
     }
 
 

@@ -33,9 +33,8 @@
         <td width="20%"><!--navigation-->
             <div class="navmenu">
                 <a href="#" onclick=loadContent("/userpages/workerpages/profileEdit.jsp")><fmt:message key="worker.profileLabel"/></a>
-                <a href="#" onclick=loadContent("/userpages/workerpages/profileEdit.jsp")><fmt:message key="worker.profileLabel"/></a>
-                <a href="#" onclick=loadContent("/userpages/workerpages/profileEdit.jsp")><fmt:message key="worker.profileLabel"/></a>
-                <a href="#" onclick=loadContent("/userpages/workerpages/profileEdit.jsp")><fmt:message key="worker.profileLabel"/></a>
+                <a href="#" onclick=loadContent("/userpages/workerpages/messages.jsp")><fmt:message key="worker.messagesLabel"/></a>
+
 
             </div>
 
