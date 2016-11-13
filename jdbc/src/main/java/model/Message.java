@@ -6,33 +6,33 @@ import java.time.Instant;
  * Created by Freemind on 2016-11-07.
  */
 public class Message {
-    private int fromUserId;
-    private int toUserId;
+    private User fromUser;
+    private User toUser;
     private Instant timeStamp;
     private String text;
 
-    public Message(int fromUserId, int toUserId,String text ,Instant timeStamp ) {
-        this.fromUserId = fromUserId;
-        this.toUserId = toUserId;
+    public Message(User fromUser, User toUser, String text , Instant timeStamp ) {
+        this.fromUser = fromUser;
+        this.toUser = toUser;
         this.timeStamp = timeStamp;
         this.text=text;
     }
 
-    public Message(int fromUserId, int toUserId,String text) {
-        this.fromUserId = fromUserId;
-        this.toUserId = toUserId;
+    public Message(User fromUser, User toUser, String text) {
+        this.fromUser = fromUser;
+        this.toUser = toUser;
 
         this.text=text;
     }
 
 
 
-    public int getFromUserId() {
-        return fromUserId;
+    public User getFromUser() {
+        return fromUser;
     }
 
-    public int getToUserId() {
-        return toUserId;
+    public User getToUserId() {
+        return toUser;
     }
 
     public Instant getTimeStamp() {
@@ -46,8 +46,8 @@ public class Message {
     @Override
     public String toString() {
         return "Message{" +
-                "fromUserId=" + fromUserId +
-                ", toUserId=" + toUserId +
+                "fromUser=" + fromUser.getLogin() +
+                ", toUserId=" + toUser.getLogin() +
                 ", timeStamp=" + timeStamp +
                 ", text='" + text + '\'' +
                 '}';
