@@ -153,7 +153,7 @@ public class MessageDao {
         }
 
         public MessageFilter allWithUserId(int userId) {
-            return (MessageFilter) addOrCondition(FROM, String.valueOf(userId)).addOrCondition(TO, String.valueOf(userId));
+            return (MessageFilter) addOrCondition("dialogs."+FROM, String.valueOf(userId)).addOrCondition("dialogs."+TO, String.valueOf(userId));
         }
 
     }
