@@ -10,7 +10,34 @@
     border-bottom: 2px solid #fffbf9;
 }
 
-
 .navmenu a:hover{
     background-color: #bfccd6; /*Фоновый цвет ячейки при наведение курсора*/
     color: #000000;}/*Цвет текста при наведении курсора*/
+
+/*
+#content{
+    display: block;
+    background-color: aliceblue;
+
+}*/
+
+.message_class
+{
+    font: bold 13px Verdana; /*Шрифт текста*/
+    /*padding: 5px; /*Внутренний отсутп текста ссылки от краев ячейки*/
+    display: block;
+   /* width: 100%; /*Ширина ячейки*//
+
+    color: #ff4051;  /*Цвет текста*/
+    text-decoration: none; /*Подчеркивание у ссылок - нет*/
+    border: 2px solid #fffbf9;
+    border-color: black;
+}
+.message_class :hover{
+    background-color: #d64245; /*Фоновый цвет ячейки при наведение курсора*/
+ /* color: #000000;*/
+}/*Цвет текста при наведении курсора*/
+
+
+
+

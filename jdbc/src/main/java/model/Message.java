@@ -1,6 +1,7 @@
 package model;
 
 import java.time.Instant;
+import java.time.format.DateTimeFormatter;
 
 /**
  * Created by Freemind on 2016-11-07.
@@ -31,7 +32,7 @@ public class Message {
         return fromUser;
     }
 
-    public User getToUserId() {
+    public User getToUser() {
         return toUser;
     }
 
@@ -43,6 +44,9 @@ public class Message {
         return text;
     }
 
+    public String getFormattedDate(){
+        return DateTimeFormatter.BASIC_ISO_DATE.format(getTimeStamp());
+    }
     @Override
     public String toString() {
         return "Message{" +

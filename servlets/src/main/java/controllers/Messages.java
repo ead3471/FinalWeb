@@ -9,6 +9,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -17,26 +18,34 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
-/**
- * Created by Freemind on 2016-11-13.
- */
+@WebServlet("/messages/")
+
 public class Messages extends HttpServlet {
     private final Logger logger = LogManager.getLogger(Messages.class);
     MessageDao messageDao;
     private final static String NOT_REGISTERED_USER_PAGE = "index.jsp";
-    private final static String USER_MESSAGES_PAGE = "/userpages/workpages/messagges.jsp";
+    private final static String USER_MESSAGES_PAGE = "/userpages/workerpages/messages.jsp";
+
     private final static String USER_MESSAGES_WITH_ANOTHER_USER_PAGE = "/userpages/workpages/messagesWithUser.jsp";
     private final static String ERROR_PAGE = "/userpages/workpages/error.jsp";
 
     @Override
+    public void init() throws ServletException {
+        messageDao = (MessageDao) getServletContext().getAttribute("messagesDao");
+    }
+
+
+
+    @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Optional<String> action = Optional.ofNullable(req.getParameter("action")).filter(value -> value.matches("^(listAll|listWith)$"));
+
         User msgReceiver = (User) req.getSession().getAttribute("user");
 
         if (msgReceiver != null && action.isPresent()) {
             if (action.get().equals("listAll")) {
                 try {
-                    List<Message> userMessages = messageDao.getAllUserMessages(msgReceiver.getId());
+                    List<Message> userMessages = messageDao.getLastMessages(msgReceiver.getId());
                     req.setAttribute("allMessages", userMessages);
                     req.getRequestDispatcher(USER_MESSAGES_PAGE).forward(req, resp);
                 } catch (DaoException e) {
@@ -82,13 +91,12 @@ public class Messages extends HttpServlet {
             req.getRequestDispatcher(NOT_REGISTERED_USER_PAGE).forward(req, resp);
         } else {
             int from = sender.getId();
-
             Optional<Integer> toOptional=getIntParameterAsOptional(req,"to");
                 if(toOptional.isPresent()){
                     String text = req.getParameter("text");
                     if (text != null) {
                         try {
-                            messageDao.insertMessage(new Message(from, toOptional.get(), text));
+                            messageDao.insertMessage(from, toOptional.get(), text);
                             req.getRequestDispatcher(USER_MESSAGES_WITH_ANOTHER_USER_PAGE).forward(req, resp);
                         }
                         catch(DaoException ex){

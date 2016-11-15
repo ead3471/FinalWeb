@@ -1,5 +1,6 @@
 package dao;
 
+
 import dao.exceptions.DaoException;
 import model.Message;
 import model.User;
@@ -22,7 +23,7 @@ public class MessageDao {
     private final static String DIALOGS_TABLE = "dialogs";
     private static final String FROM = "from_id";
     private static final String TO = "to_id";
-    private static final String TIMESTAMP = "time_stamp";
+    private static final String TIMESTAMP = "timestamp";
     private static final String TEXT = "text";
     private static final String DIALOG_ID="dialog_id";
 
@@ -31,6 +32,7 @@ public class MessageDao {
     private final static String USER_NAME ="name";
     private final static String USER_PHOTO="photo_url";
     private final static String USER_ROLE="role";
+    private final static String USER_ID="id";
 
 
 
@@ -47,13 +49,25 @@ public class MessageDao {
     public void insertMessage(Message message) throws DaoException {
         try(Connection con=connectionPool.takeConnection();
         Statement st=con.createStatement();){
-            String sql=INSERT_SQL+"'"+message.getFromUser()+"','"+message.getToUserId()+"','"+message.getText()+"')";
+            String sql=INSERT_SQL+"'"+message.getFromUser()+"','"+message.getToUser()+"','"+message.getText()+"')";
             st.executeUpdate(sql);
         }
         catch(InterruptedException|SQLException ex){
         throw new DaoException(ex);
         }
     }
+
+    public void insertMessage(int fromId,int toId,String text) throws DaoException {
+        try(Connection con=connectionPool.takeConnection();
+            Statement st=con.createStatement();){
+            String sql=INSERT_SQL+"'"+fromId+"','"+toId+"','"+text+"')";
+            st.executeUpdate(sql);
+        }
+        catch(InterruptedException|SQLException ex){
+            throw new DaoException(ex);
+        }
+    }
+
 
     public void insertMessages(List<Message> messagesForInsert) throws DaoException {
         try(Connection con=connectionPool.takeConnection();
@@ -62,7 +76,7 @@ public class MessageDao {
             for(Message message:messagesForInsert){
                 try{
                     preparedStatement.setInt(1,message.getFromUser().getId());
-                    preparedStatement.setInt(2,message.getToUserId().getId());
+                    preparedStatement.setInt(2,message.getToUser().getId());
                     preparedStatement.setString(3,message.getText());
                     preparedStatement.executeUpdate();
                 }
@@ -112,7 +126,7 @@ public class MessageDao {
         return getMessagesByFilter(filter().allWithUserId(fromId).allWithUserId(toId).orderBy(TIMESTAMP, "DESC"));
     }
 
-    private List<Message> getLastMessages(int userId) throws DaoException {
+    public List<Message> getLastMessages(int userId) throws DaoException {
 //        select from_id,to_id,text, max(timestamp) timestamp , u1.name as from_name, u2.name as to_name from dialogs d1
 //        join users u1 on d1.from_id=u1.id
 //        join users u2 on d1.to_id=u2.id
@@ -121,14 +135,15 @@ public class MessageDao {
 //        order by timestamp desc;
 
         String sql="SELECT "+FROM+","+TO+","+TEXT+",MAX("+TIMESTAMP+") "+TIMESTAMP
-                +",users_from."+USER_NAME+"AS from_"+USER_NAME+",users_from."+USER_ROLE+"AS from_"+USER_ROLE+",users_from."+USER_PHOTO+"AS from_"+USER_PHOTO
-                +",users_to."+USER_NAME+"AS to_"+USER_NAME+",users_to."+USER_ROLE+"AS to_"+USER_ROLE+",users_to."+USER_PHOTO+"AS to_"+USER_PHOTO
+                +",users_from."+USER_NAME+" AS from_"+USER_NAME+",users_from."+USER_ROLE+" AS from_"+USER_ROLE+",users_from."+USER_PHOTO+" AS from_"+USER_PHOTO
+                +",users_to."+USER_NAME+" AS to_"+USER_NAME+",users_to."+USER_ROLE+" AS to_"+USER_ROLE+",users_to."+USER_PHOTO+" AS to_"+USER_PHOTO
                 +" FROM "+DIALOGS_TABLE+" dialogs"
-                +" JOIN "+USERS_TABLE+" users_from on dialogs."+FROM+"=users_from."+USER_NAME
-                +" JOIN "+USERS_TABLE+" users_to on dialogs."+FROM+"=users_to."+USER_NAME
+                +" JOIN "+USERS_TABLE+" users_from on dialogs."+FROM+"=users_from."+ USER_ID
+                +" JOIN "+USERS_TABLE+" users_to on dialogs."+FROM+"=users_to."+USER_ID
                 +" WHERE dialogs."+FROM+"="+userId+" OR dialogs."+TO+"="+userId
                 +" GROUP BY dialogs."+DIALOG_ID
                 +" ORDER BY dialogs."+TIMESTAMP+" DESC";
+        System.out.println(sql);
         return getMessagesBySql(sql);
     }
 
@@ -144,8 +159,8 @@ public class MessageDao {
 
 
             super("SELECT "+FROM+","+TO+","+TEXT+","+TIMESTAMP
-                    +",users_from."+USER_NAME+"AS from_"+USER_NAME+",users_from."+USER_ROLE+"AS from_"+USER_ROLE+",users_from."+USER_PHOTO+"AS from_"+USER_PHOTO
-                    +",users_to."+USER_NAME+"AS to_"+USER_NAME+",users_to."+USER_ROLE+"AS to_"+USER_ROLE+",users_to."+USER_PHOTO+"AS to_"+USER_PHOTO
+                    +",users_from."+USER_NAME+" AS from_"+USER_NAME+",users_from."+USER_ROLE+" AS from_"+USER_ROLE+",users_from."+USER_PHOTO+" AS from_"+USER_PHOTO
+                    +",users_to."+USER_NAME+" AS to_"+USER_NAME+",users_to."+USER_ROLE+" AS to_"+USER_ROLE+",users_to."+USER_PHOTO+" AS to_"+USER_PHOTO
                     +" FROM "+DIALOGS_TABLE+" dialogs"
                     +" JOIN "+USERS_TABLE+" users_from on dialogs."+FROM+"=users_from."+USER_NAME
                     +" JOIN "+USERS_TABLE+" users_to on dialogs."+FROM+"=users_to."+USER_NAME

@@ -20,6 +20,28 @@ import static org.junit.Assert.*;
 public class MessageDaoTest {
 
     @Test
+    public void testGetLastMessages() throws IOException, SQLException, DaoException {
+        Properties prop=new Properties();
+        prop.load(new FileInputStream("src/test/resources/db/db.properties"));
+        ConnectionPool pool=ConnectionPool.getInstance(prop);
+
+        MessageDao messageDao=new MessageDao(pool);
+
+        List<Message> userLastMessages=messageDao.getLastMessages(5);
+
+        userLastMessages.stream().forEach(message ->
+                {
+                    System.out.println(message);
+                }
+        );
+
+
+
+
+
+    }
+
+    @Test
     public void testInsertToBase() throws IOException, SQLException, DaoException, InterruptedException {
         Properties prop=new Properties();
         prop.load(new FileInputStream("src/test/resources/db/db.properties"));
@@ -42,6 +64,7 @@ public class MessageDaoTest {
           //  System.out.println(i+" |"+nextString+"|");
 
                 dialogs.put(i++,Arrays.asList(nextString.trim().split("\\n")));
+
         }
 
 
@@ -66,7 +89,7 @@ public class MessageDaoTest {
             for(String message:dialog){
                 if(message!="\n")
                 {
-                    messageDao.insertMessage(new Message(fromUserId,toUserId,message));
+                    messageDao.insertMessage(fromUserId,toUserId,message);
                     int temp=fromUserId;
                     fromUserId=toUserId;
                     toUserId=temp;

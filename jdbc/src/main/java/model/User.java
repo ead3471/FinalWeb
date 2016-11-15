@@ -91,6 +91,20 @@ public class User {
         return getId();
     }
 
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", fullName='" + fullName + '\'' +
+                ", login='" + login + '\'' +
+                ", password='" + password + '\'' +
+                ", photoUrl='" + photoUrl + '\'' +
+                ", role='" + role + '\'' +
+                ", rate=" + rate +
+                '}';
+    }
+
     public float getRate() {
         return rate;
     }

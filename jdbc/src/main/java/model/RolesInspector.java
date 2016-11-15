@@ -30,7 +30,10 @@ public class RolesInspector {
         Map<String,List<String>> rules=new HashMap<>();
 
         rules.put("admin", Arrays.asList(".*"));
-        rules.put("worker",Arrays.asList("\\/userpages\\/worker.jsp","","\\/","\\/userpages\\/workerpages\\/.*"));
+        rules.put("worker",Arrays.asList("\\/userpages\\/worker.jsp",""
+                                            ,"\\/"
+                                            ,"\\/userpages\\/workerpages\\/.*"
+                                            ,"\\/messages\\/.*"));
         rules.put("client",Arrays.asList("\\/userpages\\/client.jsp","","\\/"));
         rules.put("guest",Arrays.asList("\\/userpages\\/guestpage.jsp","","\\/"));
         return new RolesInspector(rules);

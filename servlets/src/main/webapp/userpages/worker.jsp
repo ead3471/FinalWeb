@@ -29,11 +29,11 @@
         </td>
     </tr>
 
-    <tr>
+    <tr valign="top">
         <td width="20%"><!--navigation-->
             <div class="navmenu">
                 <a href="#" onclick=loadContent("/userpages/workerpages/profileEdit.jsp")><fmt:message key="worker.profileLabel"/></a>
-                <a href="#" onclick=loadContent("/userpages/workerpages/messages.jsp")><fmt:message key="worker.messagesLabel"/></a>
+                <a href="#" onclick=loadContent("../messages/?action=listAll")><fmt:message key="worker.messagesLabel"/></a>
 
 
             </div>
@@ -42,8 +42,8 @@
         </td>
 
 
-        <td><!--main load place-->
-            <div id="content">
+        <td height="100%"><!--main load place-->
+            <div id="content" >
 
 
 
@@ -65,7 +65,7 @@
 
     function loadContent(url) {
 
-            document.getElementById("content").innerHTML='<object type="text/html" data='+url+' ></object>';
+            document.getElementById("content").innerHTML='<object type="text/html" width=100% height=100% data='+url+' ></object>';
 
     }
 </script>
