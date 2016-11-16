@@ -17,7 +17,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.time.ZoneId;
 import java.util.Optional;
+import java.util.TimeZone;
 
 @SuppressWarnings("Duplicates")
 public class LoginFilter extends HttpFilter{
@@ -40,6 +42,12 @@ public class LoginFilter extends HttpFilter{
         String authString=request.getParameter("authString");
         HttpSession session=request.getSession();
         String userDest=request.getParameter("userDestinationUrl");
+        ZoneId userTimeZone=Optional.ofNullable(request.getParameter("timeZone")).
+                filter(val->val.length()>0).
+                map(val->ZoneId.of(val)).
+                orElse(ZoneId.of("UTC"));
+        session.setAttribute("zoneId",userTimeZone);
+
         Optional userDestination=Optional.ofNullable(request.getParameter("userDestinationUrl"));
         logger.debug("in login filter");
         try {

@@ -99,8 +99,8 @@ public class MessageDao {
         ) {
             while (rs.next()) {
                 try {
-                    User fromUser=new User(rs.getString("from_"+USER_NAME),rs.getString("from_"+USER_PHOTO),rs.getString("from_"+USER_ROLE));
-                    User toUser=new User(rs.getString("to_"+USER_NAME),rs.getString("to_"+USER_PHOTO),rs.getString("to_"+USER_ROLE));
+                    User fromUser=new User(rs.getInt(FROM),rs.getString("from_"+USER_NAME),rs.getString("from_"+USER_PHOTO),rs.getString("from_"+USER_ROLE));
+                    User toUser=new User(rs.getInt(TO),rs.getString("to_"+USER_NAME),rs.getString("to_"+USER_PHOTO),rs.getString("to_"+USER_ROLE));
                     resultList.add(new Message(fromUser, toUser, rs.getString(TEXT), rs.getTimestamp(TIMESTAMP).toInstant()));
                 } catch (Exception ex) {
                     logger.warn("Error at create message", ex);
@@ -122,8 +122,11 @@ public class MessageDao {
         return getMessagesByFilter(filter().allWithUserId(userId).orderBy(TIMESTAMP, "DESC"));
     }
 
-    private List<Message> getMessagesBetweenIds(int fromId, int toId) throws DaoException {
-        return getMessagesByFilter(filter().allWithUserId(fromId).allWithUserId(toId).orderBy(TIMESTAMP, "DESC"));
+    public List<Message> getMessagesBetweenIds(int fromId, int toId) throws DaoException {
+        return getMessagesByFilter(filter().
+                addSpecialCondition(" WHERE "+TO+"="+toId+" AND "+FROM+"="+fromId).
+                addSpecialCondition(" OR "+TO+"="+fromId+" AND "+FROM+"="+toId)
+                .orderBy(TIMESTAMP, "DESC"));
     }
 
     public List<Message> getLastMessages(int userId) throws DaoException {
@@ -139,11 +142,11 @@ public class MessageDao {
                 +",users_to."+USER_NAME+" AS to_"+USER_NAME+",users_to."+USER_ROLE+" AS to_"+USER_ROLE+",users_to."+USER_PHOTO+" AS to_"+USER_PHOTO
                 +" FROM "+DIALOGS_TABLE+" dialogs"
                 +" JOIN "+USERS_TABLE+" users_from on dialogs."+FROM+"=users_from."+ USER_ID
-                +" JOIN "+USERS_TABLE+" users_to on dialogs."+FROM+"=users_to."+USER_ID
+                +" JOIN "+USERS_TABLE+" users_to on dialogs."+TO+"=users_to."+USER_ID
                 +" WHERE dialogs."+FROM+"="+userId+" OR dialogs."+TO+"="+userId
                 +" GROUP BY dialogs."+DIALOG_ID
                 +" ORDER BY dialogs."+TIMESTAMP+" DESC";
-        System.out.println(sql);
+      //  System.out.println(sql);
         return getMessagesBySql(sql);
     }
 
@@ -162,8 +165,8 @@ public class MessageDao {
                     +",users_from."+USER_NAME+" AS from_"+USER_NAME+",users_from."+USER_ROLE+" AS from_"+USER_ROLE+",users_from."+USER_PHOTO+" AS from_"+USER_PHOTO
                     +",users_to."+USER_NAME+" AS to_"+USER_NAME+",users_to."+USER_ROLE+" AS to_"+USER_ROLE+",users_to."+USER_PHOTO+" AS to_"+USER_PHOTO
                     +" FROM "+DIALOGS_TABLE+" dialogs"
-                    +" JOIN "+USERS_TABLE+" users_from on dialogs."+FROM+"=users_from."+USER_NAME
-                    +" JOIN "+USERS_TABLE+" users_to on dialogs."+FROM+"=users_to."+USER_NAME
+                    +" JOIN "+USERS_TABLE+" users_from on dialogs."+FROM+"=users_from."+USER_ID
+                    +" JOIN "+USERS_TABLE+" users_to on dialogs."+TO+"=users_to."+USER_ID
                     );
         }
 

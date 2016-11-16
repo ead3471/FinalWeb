@@ -26,7 +26,7 @@ public class Messages extends HttpServlet {
     private final static String NOT_REGISTERED_USER_PAGE = "index.jsp";
     private final static String USER_MESSAGES_PAGE = "/userpages/workerpages/messages.jsp";
 
-    private final static String USER_MESSAGES_WITH_ANOTHER_USER_PAGE = "/userpages/workpages/messagesWithUser.jsp";
+    private final static String USER_MESSAGES_WITH_ANOTHER_USER_PAGE = "/userpages/workerpages/dialog.jsp";
     private final static String ERROR_PAGE = "/userpages/workpages/error.jsp";
 
     @Override
@@ -38,7 +38,7 @@ public class Messages extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        Optional<String> action = Optional.ofNullable(req.getParameter("action")).filter(value -> value.matches("^(listAll|listWith)$"));
+        Optional<String> action = Optional.ofNullable(req.getParameter("action")).filter(value -> value.matches("^(listAll|listWith|listBetween)$"));
 
         User msgReceiver = (User) req.getSession().getAttribute("user");
 
@@ -68,6 +68,22 @@ public class Messages extends HttpServlet {
                         }
                     }
                 }
+            if (action.get().equals("listBetween")) {
+                Optional<Integer> partner1Optional=getIntParameterAsOptional(req,"id1");
+                Optional<Integer> partner2Optional=getIntParameterAsOptional(req,"id2");
+                if(partner1Optional.isPresent()&&partner2Optional.isPresent()){
+                    try {
+                        List<Message> betweenUserMessages = messageDao.getMessagesBetweenIds(partner1Optional.get(),partner2Optional.get());
+                        req.setAttribute("dialog",betweenUserMessages);
+                        req.getRequestDispatcher(USER_MESSAGES_WITH_ANOTHER_USER_PAGE).forward(req,resp);
+                    }
+                    catch(DaoException e){
+                        logger.warn("Error list all messages for user " + msgReceiver.getLogin(), e);
+                        req.getRequestDispatcher(ERROR_PAGE).forward(req, resp);
+                    }
+                }
+            }
+
             }
     }
 

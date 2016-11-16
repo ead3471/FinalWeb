@@ -29,7 +29,7 @@
 
     <tr>
         <td>
-            <jsp:include page="/login.jsp"/>
+            <%@include file="/login.jsp"%>
         </td>
     </tr>
 
@@ -39,7 +39,8 @@
 
     <tr>
         <td>
-            <jsp:include page="/register.jsp"/>
+            <%@include file="/register.jsp"%>
+
         </td>
 
     </tr>

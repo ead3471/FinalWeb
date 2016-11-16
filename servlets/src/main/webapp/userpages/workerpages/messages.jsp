@@ -20,28 +20,21 @@
 
 <body>
 
-<div >
+<table class="messages">
+
     <c:forEach items="${requestScope.allMessages}" var="message">
 
-        <span class="message_class">
+     <tr >
+            <td width="10%" class="message_sender"><a  href=""> ${message.fromUser.fullName}</a></td>
+         <td width="10%" class="message_reciever"><a  href=""> ${message.toUser.fullName}</a></td>
+            <td class="message_text"><a  href="/messages/?action=listBetween&id1=${message.fromUser.id}&id2=${message.toUser.id}">${message.text}</a></td>
 
-            <a class="message-sender" href=""> ${message.fromUser.fullName}</a>
-            <a class="message-text" href="/messages/?action=listBetween&id1=${message.fromUser.id}&id2=${message.toUser.id}">${message.text}</a>
-           <joda-format:format time="${message.timeStamp }"/>
-            <hr>
-            <br>
-        </span>
-
+         <td width="10%" class="message_time"><joda-format:format time="${message.timeStamp}" zone="${sessionScope.zoneId}"/></td>
+     </tr>
 
     </c:forEach>
-</div>
+</table>
 </body>
-<script language="JavaScript">
-    function  getFormattedDate( time) {
 
-        var date=new Date(time);
-        return date.format("yyyy-mm-dd")
 
-    }
-</script>
 </html>

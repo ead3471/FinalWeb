@@ -15,13 +15,13 @@ import java.time.temporal.Temporal;
 public class JodaTimeFormatter extends TagSupport{
     private Temporal time;
     private String format ="yy/MM/dd HH:mm:ss";
-    private String zone="GMT";
+    private ZoneId zone=ZoneId.of("UTC");
 
-    public String getZone() {
+    public ZoneId getZone() {
         return zone;
     }
 
-    public void setZone(String zone) {
+    public void setZone(ZoneId zone) {
         this.zone = zone;
     }
 
@@ -44,7 +44,7 @@ public class JodaTimeFormatter extends TagSupport{
     public int doStartTag() throws JspException {
 
 
-        String formattedTime= DateTimeFormatter.ofPattern(format).withZone(ZoneId.of(zone)).format(time);
+        String formattedTime= DateTimeFormatter.ofPattern(format).withZone(zone).format(time);
         try {
             pageContext.getOut().print(formattedTime);
         } catch (IOException e) {

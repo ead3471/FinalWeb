@@ -12,7 +12,16 @@ public class User {
     private String role;
     private float rate;
 
-
+    /**
+     * Full user creation
+     * @param id
+     * @param login
+     * @param fullName
+     * @param password
+     * @param photoUrl
+     * @param role
+     * @param rate
+     */
     public User(int id,String login, String fullName,String password, String photoUrl, String role,float rate) {
         this.id = id;
         this.login=login;
@@ -24,13 +33,28 @@ public class User {
     }
 
 
-
+    /**For user creation on inser
+     *
+     * @param fullName
+     * @param login
+     * @param password
+     * @param photoUrl
+     * @param role
+     */
     public User(String fullName, String login,String password, String photoUrl, String role) {
         this(0,login,fullName,password,photoUrl,role,0);
     }
 
-    public User(String fullName,String photoUrl, String role){
-        this(fullName,"","",photoUrl,role);
+
+    /**User creation at message Dao
+     *
+     * @param id
+     * @param fullName
+     * @param photoUrl
+     * @param role
+     */
+    public User(int id,String fullName,String photoUrl, String role){
+        this(id,"",fullName,"",photoUrl,role,0);
 
     }
 

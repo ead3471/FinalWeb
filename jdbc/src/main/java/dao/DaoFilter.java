@@ -27,6 +27,11 @@ public class DaoFilter {
         return this;
     }
 
+    public DaoFilter addSpecialCondition(String condition){
+        resultSqlBuilder.append(condition);;
+        return this;
+    }
+
     public DaoFilter addAndCondition(String column,String relation ,String value){
         filterAndConditions.add(column+relation+"'"+value+"'");
         return this;

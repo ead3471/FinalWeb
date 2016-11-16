@@ -21,22 +21,35 @@
 
 }*/
 
-.message_class
+table.messages
 {
     font: bold 13px Verdana; /*Шрифт текста*/
-    /*padding: 5px; /*Внутренний отсутп текста ссылки от краев ячейки*/
-    display: block;
+    border-collapse: collapse;
+
+
    /* width: 100%; /*Ширина ячейки*//
 
-    color: #ff4051;  /*Цвет текста*/
-    text-decoration: none; /*Подчеркивание у ссылок - нет*/
-    border: 2px solid #fffbf9;
-    border-color: black;
+   /* color: #ff4051;  /*Цвет текста*/
+
+
+   border-color: 1px solid black;
+   /*// margin-top:50px;*/
 }
-.message_class :hover{
-    background-color: #d64245; /*Фоновый цвет ячейки при наведение курсора*/
+table.messages td {
+    border: 1px solid black;
+}
+
+table.messages tr td a{
+    text-decoration: none; /*Подчеркивание у ссылок - нет*/
+}
+table.messages tr:hover{
+    background-color: #8dacd6; /*Фоновый цвет ячейки при наведение курсора*/
  /* color: #000000;*/
 }/*Цвет текста при наведении курсора*/
+
+
+
+
 
 
 

@@ -16,7 +16,7 @@
     <meta charset="UTF-8">
     <title><fmt:message key="login.title"/></title>
 </head>
-<body>
+<body onLoad=setTimeZone()>
 <form action="/login/" method="post">
     <c:if test="${not empty requestScope.login_msg}">
         <p><font color="red"> ${requestScope.login_msg} </font></p>
@@ -46,12 +46,37 @@
                         <td><input type="hidden" name="userDestinationUrl" value="${requestScope.userDestinationUrl}">
                         </td>
                     </tr>
+
+                    <tr>
+                        <td><input id="timeZone" type="hidden" name="timeZone" value="">
+                        </td>
+                    </tr>
                 </table>
             </td>
         </tr>
 
     </table>
 </form>
+
+<script language="JavaScript">
+    function setTimeZone(){
+        console.log("here!")
+
+        var timeZoneOffset=new Date().getTimezoneOffset()/60 * (-1);
+        var timeZoneString="GMT"
+        if(timeZoneOffset>=0){
+            timeZoneString=timeZoneString+"+"+timeZoneOffset;
+        }
+        else
+            timeZoneString=timeZoneString+"-"+timeZoneOffset;
+
+        var element=document.getElementById("timeZone");
+        document.getElementById("timeZone").value=timeZoneString;
+
+    }
+
+
+</script>
 
 </body>
 </html>

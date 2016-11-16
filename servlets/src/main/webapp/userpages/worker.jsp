@@ -16,6 +16,7 @@
 <body>
 
 <h1> Hello worker ${sessionScope.user.fullName}</h1>
+<jsp:include page="/logout.jsp"/>
 
 <table border="1" width="100%">
     <tbody>
@@ -42,8 +43,8 @@
         </td>
 
 
-        <td height="100%"><!--main load place-->
-            <div id="content" >
+        <td  height="800"><!--TODO: растягивание по вертикали в зависимости от размеров  вставляемого документа??? -->
+            <div  id="content" >
 
 
 
@@ -60,7 +61,7 @@
 
 </table>
 
-<jsp:include page="/logout.jsp"/>
+
 <script language="JavaScript">
 
     function loadContent(url) {
