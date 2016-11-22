@@ -18,15 +18,14 @@
     <link href="/userpages/workerpages/STYLE.CSS" rel="stylesheet" type="text/css">
 </head>
 
-<body>
+<body >
 
-<table class="messages">
+<table class="messages" >
 
     <c:forEach items="${requestScope.allMessages}" var="message">
-
      <tr >
-            <td width="10%" class="message_sender"><a  href=""> ${message.fromUser.fullName}</a></td>
-         <td width="10%" class="message_reciever"><a  href=""> ${message.toUser.fullName}</a></td>
+            <td width="10%" class="message_sender"><a  href="/profile/id=${message.fromUser.id}"> ${message.fromUser.fullName}</a></td>
+            <td width="10%" class="message_reciever"><a  href="/profile/?id=${message.toUser.id}"> ${message.toUser.fullName}</a></td>
             <td class="message_text"><a  href="/messages/?action=listBetween&id1=${message.fromUser.id}&id2=${message.toUser.id}">${message.text}</a></td>
 
          <td width="10%" class="message_time"><joda-format:format time="${message.timeStamp}" zone="${sessionScope.zoneId}"/></td>

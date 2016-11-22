@@ -146,7 +146,7 @@ public class MessageDao {
                 +" WHERE dialogs."+FROM+"="+userId+" OR dialogs."+TO+"="+userId
                 +" GROUP BY dialogs."+DIALOG_ID
                 +" ORDER BY dialogs."+TIMESTAMP+" DESC";
-      //  System.out.println(sql);
+       System.out.println(sql);
         return getMessagesBySql(sql);
     }
 

@@ -17,13 +17,13 @@ import java.util.Optional;
 public class AuthFilter extends HttpFilter {
     private final static Logger logger = LogManager.getLogger(AuthFilter.class);
     private final static String LOGIN_PAGE = "index.jsp";
-    private UserDao userDao;
+  //  private UserDao userDao;
     private RolesInspector rolesInspector;
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
         ServletContext servletContext = filterConfig.getServletContext();
-        userDao = (UserDao) servletContext.getAttribute("userDao");
+    //    userDao = (UserDao) servletContext.getAttribute("userDao");
         rolesInspector=(RolesInspector) servletContext.getAttribute("rolesInspector");
     }
 

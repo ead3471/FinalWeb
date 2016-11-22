@@ -6,27 +6,16 @@
         version="2.1">
 
     <tlib-version>1.0</tlib-version>
-    <short-name>joda-format</short-name>
-    <uri>http://ead3471.com/</uri>
+    <short-name>specs-out</short-name>
+    <uri>http://ead3471.com</uri>
 
     <tag>
-        <name>format</name>
-        <tag-class>tags.JodaTimeFormatter</tag-class>
+        <name>print</name>
+        <tag-class>tags.SpecsList</tag-class>
         <body-content>empty</body-content>
         <attribute>
-            <name>time</name>
+            <name>specsList</name>
             <required>true</required>
-            <rtexprvalue>true</rtexprvalue>
-        </attribute>
-        <attribute>
-            <name>format</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-        </attribute>
-
-        <attribute>
-            <name>zone</name>
-            <required>false</required>
             <rtexprvalue>true</rtexprvalue>
         </attribute>
     </tag>

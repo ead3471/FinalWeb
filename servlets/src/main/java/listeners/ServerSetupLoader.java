@@ -15,6 +15,7 @@ import javax.servlet.ServletContextListener;
 import java.io.FileReader;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.Optional;
 import java.util.Properties;
 
 public class ServerSetupLoader implements ServletContextListener {
@@ -28,6 +29,8 @@ public class ServerSetupLoader implements ServletContextListener {
     private final static String ROLES_INSPECTOR_KEY="rolesInspector";
     private final static String MESSAGES_DAO_KEY="messagesDao";
     private final static String SPEC_DAO_KEY="specDao";
+    private static final String FILE_STORAGE_PATH_KEY="filesStorage";
+    private final String DEFAULT_FILE_STORAGE_PATH="/files/";
 
 
     @Override
@@ -36,10 +39,16 @@ public class ServerSetupLoader implements ServletContextListener {
             ConnectionPool connectionPool=initConnectionPool(sce.getServletContext());
             initDAO(connectionPool,sce.getServletContext());
             initRolesInspector(sce);
+            initFileStorage(sce.getServletContext());
         } catch (Exception e) {
             logger.warn("Error during connection pool init",e);
         }
 
+    }
+
+    private void initFileStorage(ServletContext servletContext){
+        String loadedContextStoragePath= Optional.ofNullable(servletContext.getInitParameter(FILE_STORAGE_PATH_KEY)).orElse(DEFAULT_FILE_STORAGE_PATH);
+        servletContext.setAttribute(FILE_STORAGE_PATH_KEY,loadedContextStoragePath);
     }
 
     private void initDAO(ConnectionPool connectionPool, ServletContext servletContext){

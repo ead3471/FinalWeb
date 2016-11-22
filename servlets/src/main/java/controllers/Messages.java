@@ -18,7 +18,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
-@WebServlet("/messages/")
+@WebServlet("/messages/*")
 
 public class Messages extends HttpServlet {
     private final Logger logger = LogManager.getLogger(Messages.class);
@@ -40,16 +40,16 @@ public class Messages extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Optional<String> action = Optional.ofNullable(req.getParameter("action")).filter(value -> value.matches("^(listAll|listWith|listBetween)$"));
 
-        User msgReceiver = (User) req.getSession().getAttribute("user");
+        User mainUser = (User) req.getSession().getAttribute("user");
 
-        if (msgReceiver != null && action.isPresent()) {
+        if (mainUser != null && action.isPresent()) {
             if (action.get().equals("listAll")) {
                 try {
-                    List<Message> userMessages = messageDao.getLastMessages(msgReceiver.getId());
+                    List<Message> userMessages = messageDao.getLastMessages(mainUser.getId());
                     req.setAttribute("allMessages", userMessages);
                     req.getRequestDispatcher(USER_MESSAGES_PAGE).forward(req, resp);
                 } catch (DaoException e) {
-                    logger.warn("Error list all messages for user " + msgReceiver.getLogin(), e);
+                    logger.warn("Error list all messages for user " + mainUser.getLogin(), e);
                     req.getRequestDispatcher(ERROR_PAGE).forward(req, resp);
                 }
                 return;
@@ -63,7 +63,7 @@ public class Messages extends HttpServlet {
                             req.getRequestDispatcher(USER_MESSAGES_WITH_ANOTHER_USER_PAGE).forward(req,resp);
                         }
                         catch(DaoException e){
-                            logger.warn("Error list all messages for user " + msgReceiver.getLogin(), e);
+                            logger.warn("Error list all messages for user " + mainUser.getLogin(), e);
                             req.getRequestDispatcher(ERROR_PAGE).forward(req, resp);
                         }
                     }
@@ -73,12 +73,18 @@ public class Messages extends HttpServlet {
                 Optional<Integer> partner2Optional=getIntParameterAsOptional(req,"id2");
                 if(partner1Optional.isPresent()&&partner2Optional.isPresent()){
                     try {
+                        int dialogPartner=partner1Optional.get();
+                        if(dialogPartner==mainUser.getId()){
+                            dialogPartner=partner2Optional.get();
+                        }
+                        req.setAttribute("dialogPartner",dialogPartner);
                         List<Message> betweenUserMessages = messageDao.getMessagesBetweenIds(partner1Optional.get(),partner2Optional.get());
                         req.setAttribute("dialog",betweenUserMessages);
+
                         req.getRequestDispatcher(USER_MESSAGES_WITH_ANOTHER_USER_PAGE).forward(req,resp);
                     }
                     catch(DaoException e){
-                        logger.warn("Error list all messages for user " + msgReceiver.getLogin(), e);
+                        logger.warn("Error list all messages for user " + mainUser.getLogin(), e);
                         req.getRequestDispatcher(ERROR_PAGE).forward(req, resp);
                     }
                 }
@@ -113,6 +119,8 @@ public class Messages extends HttpServlet {
                     if (text != null) {
                         try {
                             messageDao.insertMessage(from, toOptional.get(), text);
+                            List<Message> betweenUserMessages = messageDao.getMessagesBetweenIds(toOptional.get(),sender.getId());
+                            req.setAttribute("dialog",betweenUserMessages);
                             req.getRequestDispatcher(USER_MESSAGES_WITH_ANOTHER_USER_PAGE).forward(req, resp);
                         }
                         catch(DaoException ex){

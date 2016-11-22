@@ -6,10 +6,7 @@ import model.User;
 import org.junit.Test;
 import pool.ConnectionPool;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.io.*;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.sql.Connection;
@@ -80,6 +77,41 @@ public class UserDaoTest {
 
     }
 
+
+    @Test
+    public void testSetUserImage() throws IOException, SQLException, DaoException {
+        Properties prop=new Properties();
+        prop.load(new FileInputStream("src/test/resources/db/db.properties"));
+        ConnectionPool pool=ConnectionPool.getInstance(prop);
+        Random rnd=new Random();
+        UserDao userDao=new UserDao(pool);
+        List<User> allUsers=userDao.getAllUsers();
+
+        String sourceFilesPath="E:/Tomcat/domains/socialnet/fileStorage/google/200_200/";
+        String avatarsPath="E:/Tomcat/domains/socialnet/fileStorage/user_avatars/";
+        String shotAvatarsPath="/files/user_avatars/";
+
+        File[] avatarsFiles=new File(sourceFilesPath).listFiles();
+
+        for (User user:allUsers) {
+            System.out.println(user.getId());
+            File userNewImage=avatarsFiles[rnd.nextInt(avatarsFiles.length)];
+
+            File storeFile = File.createTempFile("img",".jpg",new File(avatarsPath));
+            Files.copy(userNewImage.toPath(),new FileOutputStream(storeFile));
+
+            user.setPhotoUrl(shotAvatarsPath+storeFile.getName());
+
+            userDao.updateUserLimited(user.getId(),user.getFullName(),user.getPassword(),user.getPhotoUrl());
+
+
+
+        }
+
+
+
+
+    }
 
 
     private void insertUserRates(Connection con,Set<Specialisation> specs,User user) throws SQLException {

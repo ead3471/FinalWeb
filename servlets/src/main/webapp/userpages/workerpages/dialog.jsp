@@ -1,6 +1,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
-<%@ taglib uri="/WEB-INF/TimeFormatter.tld" prefix="joda-format"%>
+<%@ taglib uri="/WEB-INF/TimeFormatter.tld" prefix="joda-format" %>
 
 
 <c:set var="language"
@@ -25,19 +25,23 @@
     <tr>
 
         <td colspan="4">
-            <form action="send">
-            <table>
-                <tr><td>
-                <input type="text" name="text"/>
-                    <input type="hidden" value="">
-                </td></tr>
-                <tr><td>
-                <input type="submit"/>
-                </td>
-                </tr>
-            </table>
-            </form>
+            <form action="/messages/" method="post">
+                <table border="1" width="100%">
+                    <tr>
+                        <td height="100">
+                            <input  height="100%" type="text" name="text"/>
 
+                            <input type="hidden" name="to" value="${requestScope.dialogPartner}"/>
+                            <input type="hidden" name="action" value="send"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <input type="submit" value="Send Message"/>
+                        </td>
+                    </tr>
+                </table>
+            </form>
 
 
         </td>
@@ -45,11 +49,14 @@
 
     </form>
     <c:forEach items="${dialog}" var="message">
-        <tr >
-            <td width="10%" class="message_sender"><a  href="/showuser/id=${message.fromUser.id}"> ${message.fromUser.fullName}</a></td>
-            <td width="10%" class="message_reciever"><a  href="/showuser/id=${message.toUser.id}"> ${message.toUser.fullName}</a></td>
+        <tr>
+            <td width="10%" class="message_sender"><a
+                    href="/showuser/id=${message.fromUser.id}"> ${message.fromUser.fullName}</a></td>
+            <td width="10%" class="message_reciever"><a
+                    href="/showuser/id=${message.toUser.id}"> ${message.toUser.fullName}</a></td>
             <td class="message_text">${message.text}</td>
-            <td width="10%" class="message_time"><joda-format:format time="${message.timeStamp}" zone="${sessionScope.zoneId}"/></td>
+            <td width="10%" class="message_time"><joda-format:format time="${message.timeStamp}"
+                                                                     zone="${sessionScope.zoneId}"/></td>
         </tr>
 
     </c:forEach>

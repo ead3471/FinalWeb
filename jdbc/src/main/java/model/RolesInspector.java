@@ -33,7 +33,12 @@ public class RolesInspector {
         rules.put("worker",Arrays.asList("\\/userpages\\/worker.jsp",""
                                             ,"\\/"
                                             ,"\\/userpages\\/workerpages\\/.*"
-                                            ,"\\/messages\\/.*"));
+                                            ,"\\/messages\\/.*"
+                                            ,"\\/profile\\/.*"
+                                            ,"\\/profileEdit\\/.*"
+                                            ,"\\/files\\/.*"
+
+        ));
         rules.put("client",Arrays.asList("\\/userpages\\/client.jsp","","\\/"));
         rules.put("guest",Arrays.asList("\\/userpages\\/guestpage.jsp","","\\/"));
         return new RolesInspector(rules);

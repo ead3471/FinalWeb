@@ -3,6 +3,7 @@ package dao;
 import com.sun.org.apache.xerces.internal.parsers.DOMParser;
 import dao.exceptions.DaoException;
 import model.Specialisation;
+import model.User;
 import org.junit.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -15,9 +16,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Properties;
+import java.util.*;
 
 import static org.junit.Assert.*;
 
@@ -28,7 +27,6 @@ public class SpecialisationDaoTest {
 
     @Test
      public void insertSpecialisationTest() throws SQLException, IOException, DaoException, SAXException {
-
         Properties prop=new Properties();
         prop.load(new FileInputStream("src/test/resources/db/db.properties"));
        ConnectionPool pool=ConnectionPool.getInstance(prop);
@@ -59,14 +57,8 @@ public class SpecialisationDaoTest {
                 }
             }
         }
-
-
         specialisationDao.insertSpecialisations(resultList);
-
-
 //        resultList.stream().filter(spec->spec.getRoot()==0).forEach(spec-> System.out.println(spec));
-
-
     }
 
     private List<Specialisation> getAllSpecialisations(Element rootElement,int rootElementId,int elementsCount){
@@ -81,6 +73,48 @@ public class SpecialisationDaoTest {
                 resultList.add(new Specialisation(elementsCount,rootElementId,rootElement.getAttribute("name")));
         }
         return resultList;
+    }
+
+
+    @Test
+    public void testInsertUserSpecialisations() throws IOException, SQLException, DaoException {
+        Properties prop=new Properties();
+        prop.load(new FileInputStream("src/test/resources/db/db.properties"));
+        ConnectionPool pool=ConnectionPool.getInstance(prop);
+        SpecialisationDao specialisationDao=new SpecialisationDao(pool);
+        UserDao userDao=new UserDao(pool);
+
+        List<User> users=userDao.getAllUsers();
+        List<Specialisation> rootSpecs=specialisationDao.getByFilter(specialisationDao.filter().withRoot(0));
+
+        Random rnd=new Random();
+
+        for(User user:users){
+            List<Specialisation> userSpecsList=new ArrayList<>();
+            for(Specialisation rootSpec:rootSpecs){
+                if(rnd.nextBoolean()) {
+                    List<Specialisation> subSpec = specialisationDao.getByFilter(specialisationDao.filter().withRoot(rootSpec.getId()));
+                    for (int i = 0; i < subSpec.size(); i++) {
+                        if (rnd.nextBoolean()) {
+                            userSpecsList.add(subSpec.get(i));
+                        }
+                    }
+                    if (userSpecsList.size()>0){
+                        userSpecsList.add(rootSpec);
+                    }
+                }
+            }
+            specialisationDao.insertUserSpecialisations(user,userSpecsList);
+
+
+
+
+        }
+
+
+
+
+
     }
 
 
