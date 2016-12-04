@@ -47,6 +47,10 @@ table.messages tr:hover{
  /* color: #000000;*/
 }/*Цвет текста при наведении курсора*/
 
+.error_form{
+
+    background-color: red;
+}
 
 
 

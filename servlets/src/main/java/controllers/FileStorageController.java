@@ -25,8 +25,9 @@ public class FileStorageController extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
                 throws ServletException, IOException
         {
-            String filename = URLDecoder.decode(request.getPathInfo().substring(1), "UTF-8");
-            File file = new File(pathToFileStorage, filename);
+            //String file_2=request.getRequestURI();
+            String filename = request.getRequestURI();
+            File file = new File(pathToFileStorage, request.getRequestURI());
             if(file.exists()){
             response.setHeader("Content-Type", getServletContext().getMimeType(filename));
             response.setHeader("Content-Length", String.valueOf(file.length()));

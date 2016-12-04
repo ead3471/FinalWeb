@@ -117,9 +117,9 @@ public class UserDao {
                 .append("',").append(PHOTO).append("='").append(newPhotoUrl)
                 .append("' WHERE id=").append(userId);
         executeUpdate(stringBuilder.toString());
-
-
     }
+
+
 
     private void executeUpdate(String sql) throws DaoException {
         try (Connection con = connectionPool.takeConnection();

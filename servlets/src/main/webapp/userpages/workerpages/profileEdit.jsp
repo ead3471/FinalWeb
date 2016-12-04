@@ -1,6 +1,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
-<%@ taglib prefix="specs-out" uri="http://ead3471.com" %>
+<%@ taglib prefix="specs" uri="http://ead3471.com" %>
+
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <c:set var="language"
@@ -15,16 +16,27 @@
 <body>
 
 <form action="/profileEdit/" method="post" enctype="multipart/form-data">
-    <table>
+    <table border="0">
         <tr>
             <td>
                 <img src="${sessionScope.user.photoUrl}" height="200" />
             </td>
             <td>
-                <input type="file" name="photo">
-                <fmt:message key="profileEdit.choosePhotoButton"/>
+                <input type="file" name="photo" value="<fmt:message key="profileEdit.choosePhotoButton"/>">
+
             </td>
         </tr>
+
+        <tr>
+            <td>
+                <input type="submit" value=<fmt:message key="profileEdit.submitPhotoUpload"/>>
+            </td>
+        </tr>
+        </table>
+</form>
+
+<form id="user_info" action="/profileEdit/" method="post" onSubmit= "return validateTextForm()">
+     <table border="1">
 
         <tr>
             <td>
@@ -36,13 +48,12 @@
             </td>
         </tr>
 
-
         <tr>
             <td>
                 <fmt:message key="profileEdit.newPasswordFirst"/>
             </td>
             <td>
-                <input name=password1 type="password" value="">
+                <input name="password" type="password" value="">
             </td>
         </tr>
 
@@ -56,27 +67,47 @@
         </tr>
 
         <tr>
-            <td>
+            <td colspan="2">
                 <h2>
                     <fmt:message key="profile.specs"/>
                 </h2>
             </td>
         </tr>
 
-        <tr>
-            <td>
-                <specs-out:print specsList="${requestScope.userSpecs}"/>
-            </td>
-        </tr>
+         <tr>
+             <td>
+                ${specs:printChecked(requestScope.userSpecs,requestScope.allSpecs)}
+             </td>
+         </tr>
 
-        <tr>
-            <td>
-                <input type="submit" value=<fmt:message key="profileEdit.submitUserUpdate"/>
-            </td>
-        </tr>
+
+         <tr>
+             <td>
+                 <input type="submit" value=<fmt:message key="profileEdit.submitUserUpdate"/>>
+             </td>
+         </tr>
+
     </table>
 </form>
 
+<script language="JavaScript">
+    function  validateTextForm() {
+        console.log("in validation form");
+        var form=document.getElementById("user_info")  ;
+        if(form.password.value!=(form.password2.value)){
+            alert("<fmt:message key="profileEdit.notEqualPasswords"/>");
+            form.password.className="error_form";
+            form.password2.className="error_form";
+            return false;
+        }
+
+        return true;
+    }
+</script>
+
 
 </body>
+
+
+
 </html>

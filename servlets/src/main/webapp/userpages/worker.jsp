@@ -18,7 +18,7 @@
 
 <jsp:include page="/logout.jsp"/>
 
-<table border="1" width="100%">
+<table border="0" width="100%">
     <tbody>
 
 
@@ -36,7 +36,7 @@
         </td>
 
 
-        <td  height="800"><!--TODO: растягивание по вертикали в зависимости от размеров  вставляемого документа??? -->
+        <td  height="100%"><!--TODO: растягивание по вертикали в зависимости от размеров  вставляемого документа??? -->
             <div  id="content" >
 
 
@@ -59,7 +59,7 @@
 
     function loadContent(url) {
 
-            document.getElementById("content").innerHTML='<object type="text/html" width=100% height=800 data='+url+' ></object>';
+            document.getElementById("content").innerHTML='<object type="text/html" width=100% height=1000 data='+url+' ></object>';
 
     }
 </script>

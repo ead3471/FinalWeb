@@ -6,54 +6,52 @@ import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.TagSupport;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class SpecsList extends TagSupport {
-    private List<Specialisation> specsList;
 
 
-    public List<Specialisation> getSpecsList() {
-        return specsList;
+    public static String getUserSpecificationsTree(Map<Specialisation,Collection<Specialisation>> specsTree){
+        StringBuilder outStringBuilder=new StringBuilder("<ul class=\"specs_list\">");
+        for(Specialisation rootSpec:specsTree.keySet()){
+            outStringBuilder.append("<li><b>" + rootSpec.getName() + "</b></li>\n");
+            outStringBuilder.append("<ul class=\"sub_specs_list>\">\n");
+            Collection<Specialisation> subSpecs=specsTree.get(rootSpec);
+            for(Specialisation subSpec:subSpecs){
+                outStringBuilder.append("<li>" + subSpec.getName() + "</li>\n");
+            }
+            outStringBuilder.append("</ul>\n");
+        }
+        outStringBuilder.append("</ul>\n");
+
+        return outStringBuilder.toString();
     }
 
-    public void setSpecsList(List<Specialisation> specsList) {
-        this.specsList = specsList;
-    }
 
-    @Override
-    public int doStartTag() throws JspException {
-        JspWriter writer = pageContext.getOut();
+    public static String getAllSpecsListWithCheckedUserSpecs(List<Specialisation> userSpecialisations, List<Specialisation> allSpecialisations) {
+        Map<Specialisation, List<Specialisation>> specialisationListMap = getSpecialisationMap(allSpecialisations);
+        StringBuilder outBuilder = new StringBuilder();
 
-        Map<Specialisation, List<Specialisation>> specsMap = getSpecialisationMap(specsList);
-
-
-        try {
-            writer.write("<ul class=\"specs_list\">");
-            for (Specialisation spec : specsMap.keySet()) {
-
-                writer.write("<li><b>" + spec.getName() + "</b></li>");
-
-                writer.write("<ul class=\"sub_specs_list>\">");
-                for (Specialisation subSpec : specsMap.get(spec)) {
-                    writer.write("<li>" + subSpec.getName() + "</li>");
+        outBuilder.append("<ul class=\"specs_list\">");
+        for (Specialisation spec : specialisationListMap.keySet()) {
+            outBuilder.append("<li class=\"specs_list\">").append("<b>").append(spec.getName()).append("</b></li>");
+            outBuilder.append("<ul class=\"sub_specs_list>\">");
+            for (Specialisation subSpec : specialisationListMap.get(spec)) {
+                outBuilder.append("<li>").append(subSpec.getName()).append("<input name=" + subSpec.getId() + " type=\"checkbox\" ");
+                if (userSpecialisations.contains(subSpec)) {
+                    outBuilder.append(" checked");
                 }
-                writer.write("</ul>");
-
+                outBuilder.append(">");
             }
 
-            writer.write("</ul>");
+            outBuilder.append("</ul>");
 
-        } catch (IOException e) {
-            throw new JspException(e);
         }
-
-        return SKIP_BODY;
+        outBuilder.append("</ul>");
+        return outBuilder.toString();
     }
 
-    private Map<Specialisation, List<Specialisation>> getSpecialisationMap(List<Specialisation> specialisationsList) {
+    private static Map<Specialisation, List<Specialisation>> getSpecialisationMap(List<Specialisation> specialisationsList) {
         Map<Specialisation, List<Specialisation>> resultMap = new HashMap<>();
         Map<Integer, List<Specialisation>> subSpecMap = new HashMap<>();
         for (Specialisation spec : specialisationsList) {
@@ -62,11 +60,10 @@ public class SpecsList extends TagSupport {
             } else {
                 if (subSpecMap.containsKey(spec.getRoot())) {
                     subSpecMap.get(spec.getRoot()).add(spec);
-                }
-                else{
-                    ArrayList<Specialisation> specsList=new ArrayList<>();
+                } else {
+                    ArrayList<Specialisation> specsList = new ArrayList<>();
                     specsList.add(spec);
-                    subSpecMap.put(spec.getRoot(),specsList);
+                    subSpecMap.put(spec.getRoot(), specsList);
                 }
             }
         }

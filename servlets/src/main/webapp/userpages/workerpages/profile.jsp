@@ -1,6 +1,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
-<%@ taglib uri="/WEB-INF/Specs.tld" prefix="specs-out" %>
+<%@ taglib uri="/WEB-INF/Specs.tld" prefix="specs" %>
 
 <c:set var="language"
        value="${not empty param.language ? param.language : not empty language ? language : pageContext.request.locale}"
@@ -16,7 +16,7 @@
 </head>
 <body>
 
-<table border="1">
+<table border="0">
 
     <tbody>
 
@@ -53,7 +53,7 @@
 
     <tr>
         <td colspan="2">
-            <specs-out:print specsList="${requestScope.userSpecs}"/>
+            ${specs:printUserSpecs(requestScope.userSpecs)}
         </td>
 
     </tr>

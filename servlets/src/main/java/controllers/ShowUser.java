@@ -17,7 +17,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @WebServlet("/profile/")
@@ -60,7 +62,7 @@ public class ShowUser extends HttpServlet implements HttpRequestHandler{
             }
 
             req.setAttribute("viewedUser",viewedUser.get());
-            List<Specialisation> userSpecs = specialisationDao.getByUserId(viewedUser.get().getId());
+            Map<Specialisation,Collection<Specialisation>> userSpecs = specialisationDao.getUserSpecialisationsTree(viewedUser.get().getId());
             req.setAttribute("userSpecs", userSpecs);
             req.getRequestDispatcher(USER_PROFILE_PAGE).forward(req, resp);
         }

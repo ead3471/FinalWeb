@@ -13,12 +13,9 @@ import org.xml.sax.SAXException;
 import pool.ConnectionPool;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.*;
-
-import static org.junit.Assert.*;
 
 /**
  * Created by Freemind on 2016-11-09.
@@ -99,14 +96,10 @@ public class SpecialisationDaoTest {
                             userSpecsList.add(subSpec.get(i));
                         }
                     }
-                    if (userSpecsList.size()>0){
-                        userSpecsList.add(rootSpec);
-                    }
+
                 }
             }
             specialisationDao.insertUserSpecialisations(user,userSpecsList);
-
-
 
 
         }
@@ -114,9 +107,27 @@ public class SpecialisationDaoTest {
 
 
 
-
     }
 
+    @Test
+    public void testGetSpecialisationsTree() throws SQLException, IOException, DaoException {
+
+        Properties prop=new Properties();
+        prop.load(new FileInputStream("src/test/resources/db/db.properties"));
+        ConnectionPool pool=ConnectionPool.getInstance(prop);
+        SpecialisationDao specialisationDao=new SpecialisationDao(pool);
+        Map<Specialisation,Collection<Specialisation>> specsTree=specialisationDao.getUserSpecialisationsTree(1);
+
+        specsTree.keySet().stream().forEach(rootSpec ->{
+            System.out.println(rootSpec.getName());
+            specsTree.get(rootSpec).forEach(subSpec-> System.out.println("  "+subSpec.getName()) );
+        }
+        );
+        //System.out.println(specsTree);
+
+
+
+    }
 
 
 }

@@ -9,15 +9,17 @@
     <short-name>specs-out</short-name>
     <uri>http://ead3471.com</uri>
 
-    <tag>
-        <name>print</name>
-        <tag-class>tags.SpecsList</tag-class>
-        <body-content>empty</body-content>
-        <attribute>
-            <name>specsList</name>
-            <required>true</required>
-            <rtexprvalue>true</rtexprvalue>
-        </attribute>
-    </tag>
+    <function>
+        <name>printUserSpecs</name>
+        <function-class>tags.SpecsList</function-class>
+        <function-signature>java.lang.String getUserSpecificationsTree(java.util.Map)</function-signature>
+    </function>
+
+    <function>
+        <name>printChecked</name>
+        <function-class>tags.SpecsList</function-class>
+        <function-signature>java.lang.String getAllSpecsListWithCheckedUserSpecs(java.util.List,java.util.List)</function-signature>
+    </function>
+
     <!-- Invoke 'Generate' action to add tags or functions -->
 </taglib>
