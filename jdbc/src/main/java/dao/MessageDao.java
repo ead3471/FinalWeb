@@ -137,16 +137,49 @@ public class MessageDao {
 //        group by d1.dialog_id
 //        order by timestamp desc;
 
-        String sql="SELECT "+FROM+","+TO+","+TEXT+",MAX("+TIMESTAMP+") "+TIMESTAMP
-                +",users_from."+USER_NAME+" AS from_"+USER_NAME+",users_from."+USER_ROLE+" AS from_"+USER_ROLE+",users_from."+USER_PHOTO+" AS from_"+USER_PHOTO
-                +",users_to."+USER_NAME+" AS to_"+USER_NAME+",users_to."+USER_ROLE+" AS to_"+USER_ROLE+",users_to."+USER_PHOTO+" AS to_"+USER_PHOTO
-                +" FROM "+DIALOGS_TABLE+" dialogs"
-                +" JOIN "+USERS_TABLE+" users_from on dialogs."+FROM+"=users_from."+ USER_ID
-                +" JOIN "+USERS_TABLE+" users_to on dialogs."+TO+"=users_to."+USER_ID
-                +" WHERE dialogs."+FROM+"="+userId+" OR dialogs."+TO+"="+userId
-                +" GROUP BY dialogs."+DIALOG_ID
-                +" ORDER BY dialogs."+TIMESTAMP+" DESC";
-       System.out.println(sql);
+//        String sql="SELECT "+FROM+","+TO+","+TEXT+",MAX("+TIMESTAMP+") "+TIMESTAMP
+//                +",users_from."+USER_NAME+" AS from_"+USER_NAME+",users_from."+USER_ROLE+" AS from_"+USER_ROLE+",users_from."+USER_PHOTO+" AS from_"+USER_PHOTO
+//                +",users_to."+USER_NAME+" AS to_"+USER_NAME+",users_to."+USER_ROLE+" AS to_"+USER_ROLE+",users_to."+USER_PHOTO+" AS to_"+USER_PHOTO
+//                +" FROM "+DIALOGS_TABLE+" dialogs"
+//                +" JOIN "+USERS_TABLE+" users_from on dialogs."+FROM+"=users_from."+ USER_ID
+//                +" JOIN "+USERS_TABLE+" users_to on dialogs."+TO+"=users_to."+USER_ID
+//                +" WHERE dialogs."+FROM+"="+userId+" OR dialogs."+TO+"="+userId
+//                +" GROUP BY dialogs."+DIALOG_ID
+//                +" ORDER BY dialogs."+TIMESTAMP+" DESC";
+//
+
+
+//
+//        SELECT from_id, to_id,text,timestamp,
+//        users_from.name  from_name,
+//        users_from.photo_url from_photo_url,
+//        users_to.name  to_name,
+//        users_to.role  to_role,
+//        users_to.photo_url  to_photo_url
+//        FROM dialogs  d1
+//        JOIN users users_from on d1.from_id=users_from.id
+//        JOIN users users_to on d1.to_id=users_to.id
+//        WHERE d1.timestamp =
+//                (SELECT MAX(timestamp) maxstamp
+//        FROM dialogs  d2
+//        WHERE d2.dialog_id = d1.dialog_id) and (d1.from_id='1' or d1.to_id='1')
+
+
+
+        String sql="SELECT "+FROM+","+TO+","+TEXT+","+TIMESTAMP
+                +",users_from."+USER_NAME+" from_"+USER_NAME+",users_from."+USER_ROLE+" from_"+USER_ROLE+",users_from."+USER_PHOTO+" from_"+USER_PHOTO
+                +",users_to."+USER_NAME+" to_"+USER_NAME+",users_to."+USER_ROLE+" to_"+USER_ROLE+",users_to."+USER_PHOTO+" to_"+USER_PHOTO
+                +" FROM "+DIALOGS_TABLE+" d1"
+                +" JOIN "+USERS_TABLE+" users_from on d1."+FROM+"=users_from."+ USER_ID
+                +" JOIN "+USERS_TABLE+" users_to on d1."+TO+"=users_to."+USER_ID
+                +" WHERE d1."+TIMESTAMP+"="
+                +" (SELECT MAX("+TIMESTAMP+") maxstamp"
+                +" FROM "+DIALOGS_TABLE+" d2"
+                +" WHERE d2."+DIALOG_ID+"=d1."+DIALOG_ID+") and (d1."+FROM+"='"+userId+"' or d1."+TO+"='"+userId+"')";
+
+
+        System.out.println(sql);
+
         return getMessagesBySql(sql);
     }
 

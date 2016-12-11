@@ -98,8 +98,10 @@ public class SpecialisationDaoTest {
                     }
 
                 }
+
             }
             specialisationDao.insertUserSpecialisations(user,userSpecsList);
+            System.out.println("User "+user.getId()+" done!");
 
 
         }

@@ -65,6 +65,7 @@ public class MessageDaoTest {
 
                 dialogs.put(i++,Arrays.asList(nextString.trim().split("\\n")));
 
+
         }
 
 
@@ -93,10 +94,11 @@ public class MessageDaoTest {
                     int temp=fromUserId;
                     fromUserId=toUserId;
                     toUserId=temp;
-                    Thread.sleep(rnd.nextInt(2000));
+                  Thread.sleep(rnd.nextInt(1000));
                 }
             }
             System.out.println("User "+user.getId()+" ready");
+
 
         }
 
